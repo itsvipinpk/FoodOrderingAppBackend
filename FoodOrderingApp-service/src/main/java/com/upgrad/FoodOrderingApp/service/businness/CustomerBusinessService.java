@@ -1,7 +1,10 @@
 package com.upgrad.FoodOrderingApp.service.businness;
 
+import com.upgrad.FoodOrderingApp.service.dao.CustomerAuthDao;
 import com.upgrad.FoodOrderingApp.service.dao.CustomerDao;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
+import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +12,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.apache.commons.validator.routines.EmailValidator;
 
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Service
@@ -19,6 +23,9 @@ public class CustomerBusinessService {
 
     @Autowired
     private PasswordCryptographyProvider passwordCryptographyProvider;
+
+    @Autowired
+    private CustomerAuthDao customerAuthDao;
 
 
     /**
@@ -68,6 +75,55 @@ public class CustomerBusinessService {
                     "SGR-005", "Except last name all fields should be filled");
         }
 
+    }
+
+
+    /**
+     * This method implements the logic for 'login' endpoint.
+     *
+     * @param username customers contactnumber will be the username.
+     * @param password customers password.
+     * @return CustomerAuthEntity object.
+     * @throws AuthenticationFailedException if any of the validation fails.
+     * @author: Vipin P K
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public CustomerAuthEntity authenticate(String username, String password)
+            throws AuthenticationFailedException {
+
+        // fetch the customer details from database using contactNumber(username)
+        CustomerEntity customerEntity = customerDao.getCustomerByContactNumber(username);
+
+        /*if there is no customer registered with given contactNumber then it throw
+        AuthenticationFailedException with code "ATH-001*/
+        if (customerEntity == null) {
+            throw new AuthenticationFailedException(
+                    "ATH-001", "This contact number has not been registered!");
+        }
+
+        /*if the encrypted password doesn't match with the fetched customer password throws
+        AuthenticationFailedException with code "ATH--002*/
+        final String encryptedPassword =
+                PasswordCryptographyProvider.encrypt(password, customerEntity.getSalt());
+        if (!encryptedPassword.equals(customerEntity.getPassword())) {
+            throw new AuthenticationFailedException("ATH-002", "Invalid Credentials");
+        }
+
+        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
+        CustomerAuthEntity customerAuthEntity = new CustomerAuthEntity();
+        customerAuthEntity.setUuid(UUID.randomUUID().toString());
+        customerAuthEntity.setCustomer(customerEntity);
+        final ZonedDateTime now = ZonedDateTime.now();
+        final ZonedDateTime expiresAt = now.plusHours(8);
+        customerAuthEntity.setLoginAt(now);
+        customerAuthEntity.setExpiresAt(expiresAt);
+
+
+        String accessToken = jwtTokenProvider.generateToken(customerEntity.getUuid(), now, expiresAt);
+        customerAuthEntity.setAccessToken(accessToken);
+
+        customerAuthDao.createCustomerAuthToken(customerAuthEntity);
+        return customerAuthEntity;
     }
 
 
