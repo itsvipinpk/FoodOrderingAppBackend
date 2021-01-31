@@ -14,6 +14,7 @@ public class RestaurantBusinessService {
     @Autowired
     private RestaurantDao restaurantDao;
 
+
     @Transactional(propagation = Propagation.REQUIRED)
     public List<RestaurantEntity> getAllRestaurant(){
         return restaurantDao.getAllRestaurant();

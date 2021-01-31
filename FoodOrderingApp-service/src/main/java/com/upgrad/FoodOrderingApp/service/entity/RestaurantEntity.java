@@ -8,14 +8,17 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
+import java.util.Set;
 
 @Entity
 @Table(name = "restaurant")
 @NamedQueries(
         {
-                @NamedQuery( name = "getAllRestaurants", query = "select r from RestaurantEntity r")
+                @NamedQuery( name = "getAllRestaurants", query = "select r from RestaurantEntity r ORDER BY r.customerRating DESC")
         }
 )
 public class RestaurantEntity {
@@ -40,7 +43,7 @@ public class RestaurantEntity {
 
     @NotNull
     @Column(name = "customer_rating")
-    private Double customerRating;
+    private BigDecimal customerRating;
 
     @NotNull
     @Column(name ="average_price_for_two")
@@ -54,24 +57,16 @@ public class RestaurantEntity {
     @JoinColumn(name= "address_id")
     private Address address;
 
-//    @OneToMany(mappedBy= "restaurant_category",fetch = FetchType.EAGER)
-//     private List<RestaurantCategory> category;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+     private List<CategoryEntity> category = new ArrayList<CategoryEntity>();
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "restaurant_category",
-//            joinColumns = @JoinColumn(name = "restaurant_id"),
-//            inverseJoinColumns = @JoinColumn(name = "category_id"))
-//    List<CategoryEntity> categoryEntityList;
+    public List<CategoryEntity> getCategory() {
+        return category;
+    }
 
-//    public List<CategoryEntity> getCategoryEntityList() {
-//        return categoryEntityList;
-//    }
-//
-//    public void setCategoryEntityList(List<CategoryEntity> categoryEntityList) {
-//        this.categoryEntityList = categoryEntityList;
-//    }
-
+    public void setCategory(List<CategoryEntity> category) {
+        this.category = category;
+    }
 
     public Address getAddress() {
         return address;
@@ -113,11 +108,11 @@ public class RestaurantEntity {
         this.photoUrl = photoUrl;
     }
 
-    public Double getCustomerRating() {
+    public BigDecimal getCustomerRating() {
         return customerRating;
     }
 
-    public void setCustomerRating(Double customerRating) {
+    public void setCustomerRating(BigDecimal customerRating) {
         this.customerRating = customerRating;
     }
 

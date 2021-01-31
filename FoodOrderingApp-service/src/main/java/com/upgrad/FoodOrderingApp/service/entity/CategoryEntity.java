@@ -4,7 +4,11 @@ package com.upgrad.FoodOrderingApp.service.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 
 @Entity
 @Table(name = "category")
@@ -24,20 +28,24 @@ public class CategoryEntity {
     @Column(name = "category_name")
     private String categoryName;
 
-//    @OneToMany(mappedBy = "restaurant_category")
-//    private List<RestaurantCategory> restaurantCategoryList;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "category")
+    private List<RestaurantEntity> restaurant = new ArrayList<RestaurantEntity>();
 
-//    @ManyToMany(mappedBy = "categoryEntityList")
-//    List<RestaurantEntity> restaurantEntityList;
-//
-//
-//    @ManyToMany(fetch = FetchType.LAZY,
-//            cascade = {
-//                    CascadeType.PERSIST,
-//                    CascadeType.MERGE
-//            },
-//            mappedBy = "category")
-//    List<RestaurantEntity> restaurantEntityList;
+
+
+
+
+
+
+
+
+    public List<RestaurantEntity> getRestaurants() {
+        return restaurant;
+    }
+
+    public void setRestaurants(List<RestaurantEntity> restaurant) {
+        this.restaurant = restaurant;
+    }
 
     public Integer getId() {
         return id;
@@ -64,11 +72,4 @@ public class CategoryEntity {
     }
 
 
-//    public List<RestaurantEntity> getRestaurantEntityList() {
-//        return restaurantEntityList;
-//    }
-//
-//    public void setRestaurantEntityList(List<RestaurantEntity> restaurantEntityList) {
-//        this.restaurantEntityList = restaurantEntityList;
-//    }
 }
