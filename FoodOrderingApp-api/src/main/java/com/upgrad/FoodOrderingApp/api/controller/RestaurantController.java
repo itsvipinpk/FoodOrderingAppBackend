@@ -1,5 +1,6 @@
 package com.upgrad.FoodOrderingApp.api.controller;
 
+
 import com.upgrad.FoodOrderingApp.api.model.RestaurantList;
 import com.upgrad.FoodOrderingApp.api.model.RestaurantListResponse;
 import com.upgrad.FoodOrderingApp.api.model.SignupCustomerResponse;
@@ -17,7 +18,7 @@ import java.util.List;
 @RequestMapping("/")
 public class RestaurantController {
     @Autowired
-    private RestaurantBusinessService  restaurantBusinessService;
+    private RestaurantBusinessService restaurantBusinessService;
 
 //    @CrossOrigin
 //    @RequestMapping(
@@ -33,6 +34,5 @@ public class RestaurantController {
 //    }
 
 
-
-
 }
+
