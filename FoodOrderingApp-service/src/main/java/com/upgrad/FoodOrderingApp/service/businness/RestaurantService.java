@@ -10,12 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class RestaurantBusinessService {
+public class RestaurantService {
     @Autowired
     private RestaurantDao restaurantDao;
 
 
-    @Transactional(propagation = Propagation.REQUIRED)
     public List<RestaurantEntity> getAllRestaurant(){
         return restaurantDao.getAllRestaurant();
     }
