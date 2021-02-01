@@ -15,7 +15,7 @@ public class CustomerDao {
     private EntityManager entityManager;
 
 
-    public CustomerEntity createCustomer(final CustomerEntity customerEntity) {
+    public CustomerEntity saveCustomer(final CustomerEntity customerEntity) {
         entityManager.persist(customerEntity);
         return customerEntity;
     }

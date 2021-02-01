@@ -5,7 +5,7 @@ import com.upgrad.FoodOrderingApp.api.model.LoginResponse;
 import com.upgrad.FoodOrderingApp.api.model.LogoutResponse;
 import com.upgrad.FoodOrderingApp.api.model.SignupCustomerRequest;
 import com.upgrad.FoodOrderingApp.api.model.SignupCustomerResponse;
-import com.upgrad.FoodOrderingApp.service.businness.CustomerBusinessService;
+import com.upgrad.FoodOrderingApp.service.businness.CustomerService;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
@@ -30,7 +30,7 @@ public class CustomerController {
      * @CustomerBusinessService :Customer business logic services are implemented here.
      * */
     @Autowired
-    private CustomerBusinessService customerBusinessService;
+    private CustomerService customerService;
 
 
     /**
@@ -59,7 +59,7 @@ public class CustomerController {
         customerEntity.setContactNumber(signupCustomerRequest.getContactNumber());
         customerEntity.setPassword(signupCustomerRequest.getPassword());
 
-        CustomerEntity createdCustomerEntity = customerBusinessService.createCustomer(customerEntity);
+        CustomerEntity createdCustomerEntity = customerService.saveCustomer(customerEntity);
 
         SignupCustomerResponse signupCustomerResponse =
                 new SignupCustomerResponse()
@@ -107,7 +107,7 @@ public class CustomerController {
         }
 
         CustomerAuthEntity createdCustomerAuthEntity =
-                customerBusinessService.authenticate(contactNumber, password);
+                customerService.authenticate(contactNumber, password);
 
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setId(createdCustomerAuthEntity.getCustomer().getUuid());
@@ -148,7 +148,7 @@ public class CustomerController {
         String[] authParts = authorization.split("Bearer ");
         final String accessToken =  authParts[1];
 
-        CustomerAuthEntity createdCustomerAuthEntity = customerBusinessService.logout(accessToken);
+        CustomerAuthEntity createdCustomerAuthEntity = customerService.logout(accessToken);
 
         LogoutResponse logoutResponse =
                 new LogoutResponse()
