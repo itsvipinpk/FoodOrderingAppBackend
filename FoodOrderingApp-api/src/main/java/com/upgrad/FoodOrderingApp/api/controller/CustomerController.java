@@ -1,16 +1,14 @@
 package com.upgrad.FoodOrderingApp.api.controller;
 
 
-import com.upgrad.FoodOrderingApp.api.model.LoginResponse;
-import com.upgrad.FoodOrderingApp.api.model.LogoutResponse;
-import com.upgrad.FoodOrderingApp.api.model.SignupCustomerRequest;
-import com.upgrad.FoodOrderingApp.api.model.SignupCustomerResponse;
-import com.upgrad.FoodOrderingApp.service.businness.CustomerBusinessService;
+import com.upgrad.FoodOrderingApp.api.model.*;
+import com.upgrad.FoodOrderingApp.service.businness.CustomerService;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
+import com.upgrad.FoodOrderingApp.service.exception.UpdateCustomerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,7 +28,7 @@ public class CustomerController {
      * @CustomerBusinessService :Customer business logic services are implemented here.
      * */
     @Autowired
-    private CustomerBusinessService customerBusinessService;
+    private CustomerService customerService;
 
 
     /**
@@ -59,7 +57,7 @@ public class CustomerController {
         customerEntity.setContactNumber(signupCustomerRequest.getContactNumber());
         customerEntity.setPassword(signupCustomerRequest.getPassword());
 
-        CustomerEntity createdCustomerEntity = customerBusinessService.createCustomer(customerEntity);
+        CustomerEntity createdCustomerEntity = customerService.saveCustomer(customerEntity);
 
         SignupCustomerResponse signupCustomerResponse =
                 new SignupCustomerResponse()
@@ -107,7 +105,7 @@ public class CustomerController {
         }
 
         CustomerAuthEntity createdCustomerAuthEntity =
-                customerBusinessService.authenticate(contactNumber, password);
+                customerService.authenticate(contactNumber, password);
 
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setId(createdCustomerAuthEntity.getCustomer().getUuid());
@@ -148,13 +146,58 @@ public class CustomerController {
         String[] authParts = authorization.split("Bearer ");
         final String accessToken =  authParts[1];
 
-        CustomerAuthEntity createdCustomerAuthEntity = customerBusinessService.logout(accessToken);
+        CustomerAuthEntity createdCustomerAuthEntity = customerService.logout(accessToken);
 
         LogoutResponse logoutResponse =
                 new LogoutResponse()
                         .id(createdCustomerAuthEntity.getCustomer().getUuid())
                         .message("LOGGED OUT SUCCESSFULLY");
         return new ResponseEntity<LogoutResponse>(logoutResponse, HttpStatus.OK);
+    }
+
+    /**
+     * This api endpoint is used to update customer first & last name.
+     *
+     * @param updateCustomerRequest this argument contains all the attributes required to update a
+     *     customer in the database.
+     * @param authorization customers access token in 'Bearer <access-token>' format.
+     * @return ResponseEntity<UpdateCustomerResponse> type object along with HttpStatus as OK.
+     * @throws AuthorizationFailedException if any validation on customer access token fails.
+     * @throws UpdateCustomerException if first name is not provided in updateCustomerRequest param.
+     * @author Vipin P K
+     */
+    @CrossOrigin
+    @RequestMapping(
+            method = RequestMethod.PUT,
+            path = "/customer",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<UpdateCustomerResponse> update(
+            @RequestHeader("authorization") final String authorization,
+            @RequestBody(required = true) final UpdateCustomerRequest updateCustomerRequest)
+            throws UpdateCustomerException, AuthorizationFailedException {
+
+        if (updateCustomerRequest.getFirstName() == null
+                || updateCustomerRequest.getFirstName().isEmpty()) {
+            throw new UpdateCustomerException("UCR-002", "First name field should not be empty");
+        }
+
+        String[] authParts = authorization.split("Bearer ");
+        final String accessToken =  authParts[1];
+
+        CustomerEntity customerEntity = customerService.getCustomer(accessToken);
+        customerEntity.setFirstName(updateCustomerRequest.getFirstName());
+        customerEntity.setLastName(updateCustomerRequest.getLastName());
+
+        CustomerEntity updatedCustomerEntity = customerService.updateCustomer(customerEntity);
+
+        UpdateCustomerResponse updateCustomerResponse = new UpdateCustomerResponse();
+        updateCustomerResponse.setId(updatedCustomerEntity.getUuid());
+        updateCustomerResponse.setFirstName(updatedCustomerEntity.getFirstName());
+        updateCustomerResponse.setLastName(updatedCustomerEntity.getLastName());
+        updateCustomerResponse.status("CUSTOMER DETAILS UPDATED SUCCESSFULLY");
+
+        return new ResponseEntity<UpdateCustomerResponse>(updateCustomerResponse, HttpStatus.OK);
     }
 
 }

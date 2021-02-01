@@ -17,7 +17,7 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Service
-public class CustomerBusinessService {
+public class CustomerService {
 
     @Autowired
     private CustomerDao customerDao;
@@ -38,7 +38,7 @@ public class CustomerBusinessService {
      * @author: Vipin P K
      */
     @Transactional(propagation = Propagation.REQUIRED)
-    public CustomerEntity createCustomer(CustomerEntity customerEntity) throws SignUpRestrictedException {
+    public CustomerEntity saveCustomer(CustomerEntity customerEntity) throws SignUpRestrictedException {
 
         /*Validation for required fields if any field other than lastname is empty then it throws
         SignUpRestrictedException exception*/
@@ -70,7 +70,7 @@ public class CustomerBusinessService {
             String[] encryptedText = passwordCryptographyProvider.encrypt(customerEntity.getPassword());
             customerEntity.setSalt(encryptedText[0]);
             customerEntity.setPassword(encryptedText[1]);
-            return customerDao.createCustomer(customerEntity);
+            return customerDao.saveCustomer(customerEntity);
         } else {
             throw new SignUpRestrictedException(
                     "SGR-005", "Except last name all fields should be filled");
@@ -144,6 +144,19 @@ public class CustomerBusinessService {
         customerAuthDao.updateCustomerAuth(customerAuthEntity);
         return customerAuthEntity;
     }
+
+    /**
+     * This method updates the customer first & last name in database.
+     * @author: Vipin P K
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public CustomerEntity updateCustomer(final CustomerEntity customerEntity) {
+        return customerDao.updateCustomer(customerEntity);
+    }
+
+
+
+
 
 /**
  * Common util methods to check validity of contact number, email and password etc..

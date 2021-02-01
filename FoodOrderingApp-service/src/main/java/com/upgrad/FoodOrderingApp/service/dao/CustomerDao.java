@@ -15,7 +15,7 @@ public class CustomerDao {
     private EntityManager entityManager;
 
 
-    public CustomerEntity createCustomer(final CustomerEntity customerEntity) {
+    public CustomerEntity saveCustomer(final CustomerEntity customerEntity) {
         entityManager.persist(customerEntity);
         return customerEntity;
     }
@@ -34,5 +34,15 @@ public class CustomerDao {
         } catch (NoResultException nre) {
             return null;
         }
+    }
+
+    /**
+     * This method updates the customer details in the database.
+     * @return Updated CustomerEntity object.
+     * @author: Vipin P K
+     */
+    public CustomerEntity updateCustomer(final CustomerEntity customerEntity) {
+        entityManager.merge(customerEntity);
+        return customerEntity;
     }
 }
