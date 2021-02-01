@@ -145,6 +145,19 @@ public class CustomerService {
         return customerAuthEntity;
     }
 
+    /**
+     * This method updates the customer first & last name in database.
+     * @author: Vipin P K
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public CustomerEntity updateCustomer(final CustomerEntity customerEntity) {
+        return customerDao.updateCustomer(customerEntity);
+    }
+
+
+
+
+
 /**
  * Common util methods to check validity of contact number, email and password etc..
  * */
