@@ -5,4 +5,5 @@ FoodOrderingApp-service/target/
 FoodOrderingApp-db/FoodOrderingApp-db.iml
 FoodOrderingApp-api/FoodOrderingApp-api.iml
 FoodOrderingApp-service/FoodOrderingApp-service.iml
-*.iml
+FoodOrderingApp-db/src/main/resources/config/localhost.properties
+FoodOrderingApp-api/src/main/resources/application.yaml
