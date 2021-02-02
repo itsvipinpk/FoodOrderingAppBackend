@@ -7,6 +7,7 @@ import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
+import com.upgrad.FoodOrderingApp.service.exception.UpdateCustomerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -71,13 +72,12 @@ public class CustomerService {
             customerEntity.setSalt(encryptedText[0]);
             customerEntity.setPassword(encryptedText[1]);
             return customerDao.saveCustomer(customerEntity);
-        } else {
+        }else {
             throw new SignUpRestrictedException(
                     "SGR-005", "Except last name all fields should be filled");
         }
 
     }
-
 
     /**
      * This method implements the logic for 'login' endpoint.
@@ -152,6 +152,34 @@ public class CustomerService {
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerEntity updateCustomer(final CustomerEntity customerEntity) {
         return customerDao.updateCustomer(customerEntity);
+    }
+
+    /**
+     * This method updates password of the given customer.
+     *
+     * @param oldPassword Customer's old password.
+     * @param newPassword Customer's new password.
+     * @param customerEntity CustomerEntity object to update the password.
+     * @return Updated CustomerEntity object.
+     * @throws UpdateCustomerException If any of the validation for old or new password fails.
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public CustomerEntity updateCustomerPassword(
+            final String oldPassword, final String newPassword, final CustomerEntity customerEntity)
+            throws UpdateCustomerException {
+        if (isValidPassword(newPassword)) {
+            String oldEncryptedPassword =
+                    PasswordCryptographyProvider.encrypt(oldPassword, customerEntity.getSalt());
+            if (!oldEncryptedPassword.equals(customerEntity.getPassword())) {
+                throw new UpdateCustomerException("UCR-004", "Incorrect old password!");
+            }
+            String[] encryptedText = passwordCryptographyProvider.encrypt(newPassword);
+            customerEntity.setSalt(encryptedText[0]);
+            customerEntity.setPassword(encryptedText[1]);
+            return customerDao.updateCustomer(customerEntity);
+        } else {
+            throw new UpdateCustomerException("UCR-001", "Weak password!");
+        }
     }
 
 
