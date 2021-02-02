@@ -55,26 +55,10 @@ public class RestaurantEntity {
 
     @OneToOne
     @JoinColumn(name= "address_id")
-    private Address address;
+    private AddressEntity addressEntity;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
      private List<CategoryEntity> category = new ArrayList<CategoryEntity>();
-
-    public List<CategoryEntity> getCategory() {
-        return category;
-    }
-
-    public void setCategory(List<CategoryEntity> category) {
-        this.category = category;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
 
     public Integer getId() {
         return id;
@@ -132,7 +116,21 @@ public class RestaurantEntity {
         this.numberOfCustomersRated = numberOfCustomersRated;
     }
 
+    public AddressEntity getAddressEntity() {
+        return addressEntity;
+    }
 
+    public void setAddressEntity(AddressEntity addressEntity) {
+        this.addressEntity = addressEntity;
+    }
+
+    public List<CategoryEntity> getCategory() {
+        return category;
+    }
+
+    public void setCategory(List<CategoryEntity> category) {
+        this.category = category;
+    }
 
     @Override
     public boolean equals(Object obj) {
