@@ -1,17 +1,25 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Entity
 @Table(name = "category")
+@NamedQueries(
+        {
+//                @NamedQuery(name = "getAllRestaurantByCategoryId", query = "select c from CategoryEntity c where c.uuid = :categoryId")
+                @NamedQuery(name = "getAllCategories", query = "select c from CategoryEntity c "),
+                @NamedQuery(name = "getAllRestaurantByCategoryId", query = "select c from CategoryEntity c ")
+        }
+)
 
 public class CategoryEntity {
     @Id
@@ -24,28 +32,23 @@ public class CategoryEntity {
     @Column(name = "uuid", unique = true)
     private String uuid;
 
-
+    @Size(max = 255)
     @Column(name = "category_name")
     private String categoryName;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "category")
-    private List<RestaurantEntity> restaurant = new ArrayList<RestaurantEntity>();
+    //    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "category")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany(mappedBy = "category")
+    private List<RestaurantEntity> restaurants = new ArrayList<RestaurantEntity>();
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany(mappedBy = "category")
+    private List<ItemEntity> items = new ArrayList<ItemEntity>();
 
 
 
-
-
-
-
-
-
-    public List<RestaurantEntity> getRestaurants() {
-        return restaurant;
-    }
-
-    public void setRestaurants(List<RestaurantEntity> restaurant) {
-        this.restaurant = restaurant;
-    }
+    /*  getters and setters
+     * */
 
     public Integer getId() {
         return id;
@@ -71,5 +74,19 @@ public class CategoryEntity {
         this.categoryName = categoryName;
     }
 
+    public List<RestaurantEntity> getRestaurants() {
+        return restaurants;
+    }
 
+    public void setRestaurants(List<RestaurantEntity> restaurants) {
+        this.restaurants = restaurants;
+    }
+
+    public List<ItemEntity> getItems() {
+        return items;
+    }
+
+    public void setItems(List<ItemEntity> items) {
+        this.items = items;
+    }
 }

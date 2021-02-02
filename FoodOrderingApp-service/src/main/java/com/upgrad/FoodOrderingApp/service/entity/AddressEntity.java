@@ -1,68 +1,42 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 
-@SuppressWarnings("all")
+
 @Entity
-@Table(name = "address",uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
-@NamedQueries({
+@Table(name = "address")
+public class AddressEntity {
 
-        @NamedQuery(name = "getAddressByUuid",query = "SELECT a from AddressEntity a where a.uuid = :uuid"),
-})
-
-public class AddressEntity implements Serializable {
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "uuid")
-    @Size(max = 200)
     @NotNull
+    @Size(max = 200)
+    @Column(name = "uuid", unique = true)
     private String uuid;
 
     @Column(name = "flat_buil_number")
-    @Size(max = 255)
-    private String flatBuilNo;
+    private String flatBuilNumber;
 
-    @Column(name = "locality")
-    @Size(max = 255)
+    @Column(name ="locality")
     private String locality;
 
-    @Column(name = "city")
-    @Size(max = 30)
+    @Column(name ="city")
     private String city;
 
-    @Column(name = "pincode")
-    @Size(max = 30)
-    private String pincode;
+    @Column(name ="pincode")
+    private   String  pincode;
 
-    @Column(name = "active")
-    private Integer active = 1;
-
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "state_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private StateEntity state;
+    private State state;
 
-    public AddressEntity(){
-    }
-
-    public AddressEntity(String uuid, String flatBuilNo, String locality, String city, String pincode, StateEntity stateEntity) {
-        this.uuid = uuid;
-        this.flatBuilNo =flatBuilNo;
-        this.locality = locality;
-        this.city = city;
-        this.pincode = pincode;
-        this.state = stateEntity;
-        return;
-    }
+     @Column(name ="active")
+     private  Integer  active;
 
     public Integer getId() {
         return id;
@@ -80,12 +54,12 @@ public class AddressEntity implements Serializable {
         this.uuid = uuid;
     }
 
-    public String getFlatBuilNo() {
-        return flatBuilNo;
+    public String getFlatBuilNumber() {
+        return flatBuilNumber;
     }
 
-    public void setFlatBuilNo(String flatBuilNo) {
-        this.flatBuilNo = flatBuilNo;
+    public void setFlatBuilNumber(String flatBuilNumber) {
+        this.flatBuilNumber = flatBuilNumber;
     }
 
     public String getLocality() {
@@ -112,6 +86,14 @@ public class AddressEntity implements Serializable {
         this.pincode = pincode;
     }
 
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State stateId) {
+        this.state = stateId;
+    }
+
     public Integer getActive() {
         return active;
     }
@@ -119,13 +101,4 @@ public class AddressEntity implements Serializable {
     public void setActive(Integer active) {
         this.active = active;
     }
-
-    public StateEntity getState() {
-        return state;
-    }
-
-    public void setState(StateEntity state) {
-        this.state = state;
-    }
-
 }

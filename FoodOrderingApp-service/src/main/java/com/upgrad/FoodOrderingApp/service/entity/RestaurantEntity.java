@@ -18,7 +18,7 @@ import java.util.Set;
 @Table(name = "restaurant")
 @NamedQueries(
         {
-                @NamedQuery( name = "getAllRestaurants", query = "select r from RestaurantEntity r ORDER BY r.customerRating DESC")
+                @NamedQuery(name = "getAllRestaurants", query = "select r from RestaurantEntity r ORDER BY r.customerRating DESC")
         }
 )
 public class RestaurantEntity {
@@ -46,19 +46,26 @@ public class RestaurantEntity {
     private BigDecimal customerRating;
 
     @NotNull
-    @Column(name ="average_price_for_two")
+    @Column(name = "average_price_for_two")
     private Integer AveragePriceForTwo;
 
     @NotNull
-    @Column(name ="number_of_customers_rated")
+    @Column(name = "number_of_customers_rated")
     private Integer numberOfCustomersRated;
 
     @OneToOne
-    @JoinColumn(name= "address_id")
+    @JoinColumn(name = "address_id")
     private AddressEntity addressEntity;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-     private List<CategoryEntity> category = new ArrayList<CategoryEntity>();
+    //    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "restaurant_category",
+            joinColumns = {@JoinColumn(name = "restaurant_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")}
+    )
+    private List<CategoryEntity> category = new ArrayList<CategoryEntity>();
+
 
     public Integer getId() {
         return id;
