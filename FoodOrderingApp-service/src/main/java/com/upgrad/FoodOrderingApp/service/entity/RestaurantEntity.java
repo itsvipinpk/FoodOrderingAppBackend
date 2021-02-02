@@ -1,3 +1,166 @@
+//package com.upgrad.FoodOrderingApp.service.entity;
+//
+//import org.apache.commons.lang3.builder.EqualsBuilder;
+//import org.apache.commons.lang3.builder.HashCodeBuilder;
+//import org.apache.commons.lang3.builder.ToStringBuilder;
+//import org.apache.commons.lang3.builder.ToStringStyle;
+//
+//import javax.persistence.*;
+//import javax.validation.constraints.NotNull;
+//import javax.validation.constraints.Size;
+//import java.math.BigDecimal;
+//import java.util.ArrayList;
+//import java.util.List;
+//
+//@Entity
+//@Table(name = "restaurant")
+//@NamedQueries(
+//        {
+//                @NamedQuery( name = "getAllRestaurants", query = "select r from RestaurantEntity r ORDER BY r.customerRating DESC"),
+//                @NamedQuery( name = "getAllRestaurantsByName", query ="select r from RestaurantEntity r where r.restaurantName = :rname"),
+//                @NamedQuery( name = "getRestaurantByRestaurantId", query ="select r from RestaurantEntity r where r.uuid = :restaurantId")
+//        }
+//)
+//public class RestaurantEntity {
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "id")
+//    private Integer id;
+//
+//    @NotNull
+//    @Size(max = 200)
+//    @Column(name = "uuid", unique = true)
+//    private String uuid;
+//
+//    @NotNull
+//    @Size(max = 50)
+//    @Column(name = "restaurant_name")
+//    private String restaurantName;
+//
+//    @Size(max = 255)
+//    @Column(name = " photo_url")
+//    private String  photoUrl;
+//
+//    @NotNull
+//    @Column(name = "customer_rating")
+//    private BigDecimal customerRating;
+//
+//    @NotNull
+//    @Column(name ="average_price_for_two")
+//    private Integer AveragePriceForTwo;
+//
+//    @NotNull
+//    @Column(name ="number_of_customers_rated")
+//    private Integer numberOfCustomersRated;
+//
+//    @OneToOne
+//    @JoinColumn(name= "address_id")
+//    private AddressEntity address;
+//
+//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//     private List<CategoryEntity> category = new ArrayList<CategoryEntity>();
+//
+//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    private List<ItemEntity> items = new ArrayList<ItemEntity>();
+//
+//    public List<ItemEntity> getItems() {
+//        return items;
+//    }
+//
+//    public void setItems(List<ItemEntity> item) {
+//        this.items = item;
+//    }
+//
+//    public List<CategoryEntity> getCategory() {
+//        return category;
+//    }
+//
+//    public void setCategory(List<CategoryEntity> category) {
+//        this.category = category;
+//    }
+//
+//    public AddressEntity getAddress() {
+//        return address;
+//    }
+//
+//    public void setAddress(AddressEntity address) {
+//        this.address = address;
+//    }
+//
+//    public Integer getId() {
+//        return id;
+//    }
+//
+//    public void setId(Integer id) {
+//        this.id = id;
+//    }
+//
+//    public String getUuid() {
+//        return uuid;
+//    }
+//
+//    public void setUuid(String uuid) {
+//        this.uuid = uuid;
+//    }
+//
+//    public String getRestaurantName() {
+//        return restaurantName;
+//    }
+//
+//    public void setRestaurantName(String restaurantName) {
+//        this.restaurantName = restaurantName;
+//    }
+//
+//    public String getPhotoUrl() {
+//        return photoUrl;
+//    }
+//
+//    public void setPhotoUrl(String photoUrl) {
+//        this.photoUrl = photoUrl;
+//    }
+//
+//    public BigDecimal getCustomerRating() {
+//        return customerRating;
+//    }
+//
+//    public void setCustomerRating(BigDecimal customerRating) {
+//        this.customerRating = customerRating;
+//    }
+//
+//    public Integer getAveragePriceForTwo() {
+//        return AveragePriceForTwo;
+//    }
+//
+//    public void setAveragePriceForTwo(Integer averagePriceForTwo) {
+//        AveragePriceForTwo = averagePriceForTwo;
+//    }
+//
+//    public Integer getNumberOfCustomersRated() {
+//        return numberOfCustomersRated;
+//    }
+//
+//    public void setNumberOfCustomersRated(Integer numberOfCustomersRated) {
+//        this.numberOfCustomersRated = numberOfCustomersRated;
+//    }
+//
+//
+//
+//    @Override
+//    public boolean equals(Object obj) {
+//        return new EqualsBuilder().append(this, obj).isEquals();
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return new HashCodeBuilder().append(this).hashCode();
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+//    }
+//
+//}
 package com.upgrad.FoodOrderingApp.service.entity;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -10,15 +173,15 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 
 @Entity
 @Table(name = "restaurant")
 @NamedQueries(
         {
-                @NamedQuery( name = "getAllRestaurants", query = "select r from RestaurantEntity r ORDER BY r.customerRating DESC")
+                @NamedQuery( name = "getAllRestaurants", query = "select r from RestaurantEntity r ORDER BY r.customerRating DESC"),
+//                @NamedQuery( name = "getAllRestaurantsByName", query = "select r from RestaurantEntity r where r.restaurantName = : rname  ORDER BY r.customerRating DESC")
         }
 )
 public class RestaurantEntity {
@@ -55,10 +218,18 @@ public class RestaurantEntity {
 
     @OneToOne
     @JoinColumn(name= "address_id")
-    private Address address;
+    private AddressEntity address;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-     private List<CategoryEntity> category = new ArrayList<CategoryEntity>();
+    //    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "restaurant_category",
+            joinColumns = {@JoinColumn(name = "restaurant_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")}
+    )
+    private List<CategoryEntity> category = new ArrayList<CategoryEntity>();
+
+
 
     public List<CategoryEntity> getCategory() {
         return category;
@@ -68,11 +239,11 @@ public class RestaurantEntity {
         this.category = category;
     }
 
-    public Address getAddress() {
+    public AddressEntity getAddress() {
         return address;
     }
 
-    public void setAddress(Address address) {
+    public void setAddress(AddressEntity address) {
         this.address = address;
     }
 
@@ -132,16 +303,17 @@ public class RestaurantEntity {
         this.numberOfCustomersRated = numberOfCustomersRated;
     }
 
-
-
     @Override
-    public boolean equals(Object obj) {
-        return new EqualsBuilder().append(this, obj).isEquals();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RestaurantEntity that = (RestaurantEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(uuid, that.uuid) && Objects.equals(restaurantName, that.restaurantName) && Objects.equals(photoUrl, that.photoUrl) && Objects.equals(customerRating, that.customerRating) && Objects.equals(AveragePriceForTwo, that.AveragePriceForTwo) && Objects.equals(numberOfCustomersRated, that.numberOfCustomersRated) && Objects.equals(address, that.address) && Objects.equals(category, that.category);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(this).hashCode();
+        return Objects.hash(id, uuid, restaurantName, photoUrl, customerRating, AveragePriceForTwo, numberOfCustomersRated, address, category);
     }
 
     @Override
