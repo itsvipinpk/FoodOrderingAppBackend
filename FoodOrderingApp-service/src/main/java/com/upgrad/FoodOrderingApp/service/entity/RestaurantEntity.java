@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,10 +19,14 @@ import java.util.Set;
 @Table(name = "restaurant")
 @NamedQueries(
         {
-                @NamedQuery(name = "getAllRestaurants", query = "select r from RestaurantEntity r ORDER BY r.customerRating DESC")
+
+
+                @NamedQuery( name = "getAllRestaurants", query = "select r from RestaurantEntity r ORDER BY r.customerRating DESC"),
+                @NamedQuery( name = "restaurantByUUID",  query = "select r from RestaurantEntity r where r.uuid=:uuid")
+
         }
 )
-public class RestaurantEntity {
+public class RestaurantEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -54,7 +59,9 @@ public class RestaurantEntity {
     private Integer numberOfCustomersRated;
 
     @OneToOne
-    @JoinColumn(name = "address_id")
+    @NotNull
+    @JoinColumn(name= "address_id")
+
     private AddressEntity addressEntity;
 
     //    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

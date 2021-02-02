@@ -6,11 +6,13 @@ import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
 
 @Repository
+@SuppressWarnings("all")
 public class RestaurantDao {
     @PersistenceContext
     private EntityManager entityManager;
@@ -24,6 +26,7 @@ public class RestaurantDao {
             return null;
         }
     }
+
 
     public List<ItemEntity> getAllItems() {
         try {
@@ -45,6 +48,22 @@ public class RestaurantDao {
         }
     }
 
+            /**
+             * Fetch the restaurant based on UUID.
+             *
+             * @param uuid
+             * @return RestaurantEntity if found in database else null.
+             */
+            public RestaurantEntity restaurantByUUID (String uuid){
+                try {
+                    return entityManager
+                            .createNamedQuery("restaurantByUUID", RestaurantEntity.class)
+                            .setParameter("uuid", uuid)
+                            .getSingleResult();
+                } catch (NoResultException nre) {
 
-}
+                    return null;
+                }
+            }
 
+    }
