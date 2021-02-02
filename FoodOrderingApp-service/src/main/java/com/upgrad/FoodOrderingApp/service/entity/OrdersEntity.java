@@ -6,9 +6,10 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 
 
+@SuppressWarnings("All")
 @Entity
 @Table(name = "orders")
-public class Orders {
+public class OrdersEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,6 +49,7 @@ public class Orders {
     @NotNull
     @Column(name = "restaurant_id")
     private   Integer restaurantId;
+
 
 
 }
