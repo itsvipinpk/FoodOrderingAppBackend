@@ -10,15 +10,15 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "restaurant")
 @NamedQueries(
         {
-                @NamedQuery( name = "getAllRestaurants", query = "select r from RestaurantEntity r ORDER BY r.customerRating DESC"),
-//                @NamedQuery( name = "getAllRestaurantsByName", query = "select r from RestaurantEntity r where r.restaurantName = : rname  ORDER BY r.customerRating DESC")
+                @NamedQuery(name = "getAllRestaurants", query = "select r from RestaurantEntity r ORDER BY r.customerRating DESC")
         }
 )
 public class RestaurantEntity {
@@ -39,23 +39,23 @@ public class RestaurantEntity {
 
     @Size(max = 255)
     @Column(name = " photo_url")
-    private String  photoUrl;
+    private String photoUrl;
 
     @NotNull
     @Column(name = "customer_rating")
     private BigDecimal customerRating;
 
     @NotNull
-    @Column(name ="average_price_for_two")
+    @Column(name = "average_price_for_two")
     private Integer AveragePriceForTwo;
 
     @NotNull
-    @Column(name ="number_of_customers_rated")
+    @Column(name = "number_of_customers_rated")
     private Integer numberOfCustomersRated;
 
     @OneToOne
-    @JoinColumn(name= "address_id")
-    private AddressEntity address;
+    @JoinColumn(name = "address_id")
+    private AddressEntity addressEntity;
 
     //    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
@@ -66,23 +66,6 @@ public class RestaurantEntity {
     )
     private List<CategoryEntity> category = new ArrayList<CategoryEntity>();
 
-
-
-    public List<CategoryEntity> getCategory() {
-        return category;
-    }
-
-    public void setCategory(List<CategoryEntity> category) {
-        this.category = category;
-    }
-
-    public AddressEntity getAddress() {
-        return address;
-    }
-
-    public void setAddress(AddressEntity address) {
-        this.address = address;
-    }
 
     public Integer getId() {
         return id;
@@ -140,17 +123,30 @@ public class RestaurantEntity {
         this.numberOfCustomersRated = numberOfCustomersRated;
     }
 
+    public AddressEntity getAddressEntity() {
+        return addressEntity;
+    }
+
+    public void setAddressEntity(AddressEntity addressEntity) {
+        this.addressEntity = addressEntity;
+    }
+
+    public List<CategoryEntity> getCategory() {
+        return category;
+    }
+
+    public void setCategory(List<CategoryEntity> category) {
+        this.category = category;
+    }
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RestaurantEntity that = (RestaurantEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(uuid, that.uuid) && Objects.equals(restaurantName, that.restaurantName) && Objects.equals(photoUrl, that.photoUrl) && Objects.equals(customerRating, that.customerRating) && Objects.equals(AveragePriceForTwo, that.AveragePriceForTwo) && Objects.equals(numberOfCustomersRated, that.numberOfCustomersRated) && Objects.equals(address, that.address) && Objects.equals(category, that.category);
+    public boolean equals(Object obj) {
+        return new EqualsBuilder().append(this, obj).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, uuid, restaurantName, photoUrl, customerRating, AveragePriceForTwo, numberOfCustomersRated, address, category);
+        return new HashCodeBuilder().append(this).hashCode();
     }
 
     @Override

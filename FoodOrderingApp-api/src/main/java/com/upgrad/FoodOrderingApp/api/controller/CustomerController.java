@@ -57,22 +57,31 @@ public class CustomerController {
         customerEntity.setContactNumber(signupCustomerRequest.getContactNumber());
         customerEntity.setPassword(signupCustomerRequest.getPassword());
 
-        CustomerEntity createdCustomerEntity = customerService.saveCustomer(customerEntity);
+        if(customerEntity.getFirstName().isEmpty() ||
+        customerEntity.getContactNumber().isEmpty() ||
+        customerEntity.getEmailAddress().isEmpty() ||
+        customerEntity.getPassword().isEmpty()) {
+            throw new SignUpRestrictedException(
+                    "SGR-005", "Except last name all fields should be filled");
+        }
 
-        SignupCustomerResponse signupCustomerResponse =
-                new SignupCustomerResponse()
-                        .id(createdCustomerEntity.getUuid())
-                        .status("CUSTOMER SUCCESSFULLY REGISTERED");
+            CustomerEntity createdCustomerEntity = customerService.saveCustomer(customerEntity);
+
+            SignupCustomerResponse signupCustomerResponse =
+                    new SignupCustomerResponse()
+                            .id(createdCustomerEntity.getUuid())
+                            .status("CUSTOMER SUCCESSFULLY REGISTERED");
 
 
-        return new ResponseEntity<SignupCustomerResponse>(signupCustomerResponse, HttpStatus.CREATED);
+            return new ResponseEntity<SignupCustomerResponse>(signupCustomerResponse, HttpStatus.CREATED);
+
 
     }
 
     /**
      * This api is used to login the customer.
      *
-     * @param authentication customer contactNumber and password in 'Basic
+     * @param authorization customer contactNumber and password in 'Basic
      *     Base64<contactNumber:password>' format.
      * @return ResponseEntity<LoginResponse> type object with HttpStatus as OK.
      * @throws AuthenticationFailedException if customer contactNumber or password is wrong.
@@ -84,7 +93,7 @@ public class CustomerController {
             path = "/customer/login",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<LoginResponse> login(@RequestHeader("authentication") final String authentication)
+    public ResponseEntity<LoginResponse> login( @RequestHeader("authorization") final String authorization)
             throws AuthenticationFailedException{
 
         byte[] decode;
@@ -94,7 +103,7 @@ public class CustomerController {
         // authorize without Basic in prefix 'Basic Base64<contactNumber:password>' then it throws
         // AuthenticationFailedException with code as ATH-003
         try {
-            decode = Base64.getDecoder().decode(authentication.split("Basic ")[1]);
+            decode = Base64.getDecoder().decode(authorization.split("Basic ")[1]);
             String decodedText = new String(decode);
             String[] decodedArray = decodedText.split(":");
             contactNumber = decodedArray[0];
@@ -198,6 +207,51 @@ public class CustomerController {
         updateCustomerResponse.status("CUSTOMER DETAILS UPDATED SUCCESSFULLY");
 
         return new ResponseEntity<UpdateCustomerResponse>(updateCustomerResponse, HttpStatus.OK);
+    }
+
+    /**
+     * @param updatePasswordRequest this argument contains all the attributes required to update a
+     *     customer's password in the database.
+     * @param authorization customer access token in 'Bearer <access-token>' format.
+     * @return ResponseEntity<UpdatePasswordResponse> type object along with HttpStatus as OK.
+     * @throws AuthorizationFailedException if any of the validation on customer access token fails.
+     * @throws UpdateCustomerException if old or new password fields are empty.
+     * @author Vipin P K
+     */
+    @CrossOrigin
+    @RequestMapping(
+            method = RequestMethod.PUT,
+            path = "/customer/password",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<UpdatePasswordResponse> changePassword(
+            @RequestHeader("authorization") final String authorization,
+            @RequestBody(required = true) final UpdatePasswordRequest updatePasswordRequest)
+            throws UpdateCustomerException, AuthorizationFailedException {
+
+        String oldPassword = updatePasswordRequest.getOldPassword();
+        String newPassword = updatePasswordRequest.getNewPassword();
+
+        if (oldPassword != null
+                && !oldPassword.isEmpty()
+                && newPassword != null
+                && !newPassword.isEmpty()) {
+            String[] authParts = authorization.split("Bearer ");
+            final String accessToken =  authParts[1];
+            CustomerEntity customerEntity = customerService.getCustomer(accessToken);
+
+            CustomerEntity updatedCustomerEntity =
+                    customerService.updateCustomerPassword(oldPassword, newPassword, customerEntity);
+
+            UpdatePasswordResponse updatePasswordResponse =
+                    new UpdatePasswordResponse()
+                            .id(updatedCustomerEntity.getUuid())
+                            .status("CUSTOMER PASSWORD UPDATED SUCCESSFULLY");
+
+            return new ResponseEntity<UpdatePasswordResponse>(updatePasswordResponse, HttpStatus.OK);
+        } else {
+            throw new UpdateCustomerException("UCR-003", "No field should be empty");
+        }
     }
 
 }
