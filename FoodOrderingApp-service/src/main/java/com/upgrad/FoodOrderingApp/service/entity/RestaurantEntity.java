@@ -38,7 +38,7 @@ public class RestaurantEntity {
     private String restaurantName;
 
     @Size(max = 255)
-    @Column(name = " photo_url")
+    @Column(name = "photo_url")
     private String  photoUrl;
 
     @NotNull
