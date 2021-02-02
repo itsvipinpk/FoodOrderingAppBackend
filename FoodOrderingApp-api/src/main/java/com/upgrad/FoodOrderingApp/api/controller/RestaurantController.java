@@ -2,7 +2,7 @@ package com.upgrad.FoodOrderingApp.api.controller;
 
 
 import com.upgrad.FoodOrderingApp.api.model.*;
-import com.upgrad.FoodOrderingApp.service.businness.RestaurantBusinessService;
+import com.upgrad.FoodOrderingApp.service.businness.RestaurantService;
 import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import java.util.UUID;
 @RequestMapping("/")
 public class RestaurantController {
     @Autowired
-    private RestaurantBusinessService restaurantBusinessService;
+    private RestaurantService restaurantBusinessService;
 
     /*
      It's a  GET request , with no parameters
@@ -59,14 +59,14 @@ public class RestaurantController {
                             .numberCustomersRated(restaurantEntities.get(i).getNumberOfCustomersRated())
                             .address(
                                     new RestaurantDetailsResponseAddress()
-                                            .id(UUID.fromString(restaurantEntities.get(i).getAddress().getUuid()))
-                                            .flatBuildingName(restaurantEntities.get(i).getAddress().getFlatBuilNumber())
-                                            .locality(restaurantEntities.get(i).getAddress().getLocality())
-                                            .city(restaurantEntities.get(i).getAddress().getCity())
-                                            .pincode(restaurantEntities.get(i).getAddress().getPincode())
+                                            .id(UUID.fromString(restaurantEntities.get(i).getAddressEntity().getUuid()))
+                                            .flatBuildingName(restaurantEntities.get(i).getAddressEntity().getFlatBuilNo())
+                                            .locality(restaurantEntities.get(i).getAddressEntity().getLocality())
+                                            .city(restaurantEntities.get(i).getAddressEntity().getCity())
+                                            .pincode(restaurantEntities.get(i).getAddressEntity().getPincode())
                                             .state(new RestaurantDetailsResponseAddressState()
-                                                    .id(UUID.fromString(restaurantEntities.get(i).getAddress().getState().getUuid()))
-                                                    .stateName(restaurantEntities.get(i).getAddress().getState().getStateName())
+                                                    .id(UUID.fromString(restaurantEntities.get(i).getAddressEntity().getState().getStateUuid()))
+                                                    .stateName(restaurantEntities.get(i).getAddressEntity().getState().getStateName())
                                             )
                             )
                             .categories(resultCategoryValues)
