@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class OrderDao {
@@ -50,8 +51,9 @@ public class OrderDao {
 
     public List<OrderEntity> getOrdersByCustomers(Integer customerId) {
         try {
-            List<OrderEntity> orderEntities = entityManager.createNamedQuery("getOrdersByCustomerId", OrderEntity.class).setParameter("customerId", customerId).getResultList();
-            return orderEntities;
+            List<OrderEntity> orderEntities = entityManager.createNamedQuery("getAllOrders", OrderEntity.class).getResultList();
+            List<OrderEntity> result = orderEntities.stream().filter(x -> x.getCustomer().getId().equals(customerId)).collect(Collectors.toList());
+            return result;
         } catch (NoResultException nre) {
             return null;
         }
