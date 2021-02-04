@@ -5,6 +5,7 @@ import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.Collections;
 import java.util.List;
@@ -32,4 +33,5 @@ public class ItemDao {
         }
         return Collections.emptyList();
     }
+
 }

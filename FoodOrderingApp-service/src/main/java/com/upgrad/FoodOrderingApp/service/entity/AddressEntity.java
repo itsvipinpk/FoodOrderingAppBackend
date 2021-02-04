@@ -33,7 +33,7 @@ public class AddressEntity {
 
     @OneToOne
     @JoinColumn(name = "state_id")
-    private State state;
+    private StateEntity state;
 
      @Column(name ="active")
      private  Integer  active;
@@ -86,11 +86,11 @@ public class AddressEntity {
         this.pincode = pincode;
     }
 
-    public State getState() {
+    public StateEntity getState() {
         return state;
     }
 
-    public void setState(State stateId) {
+    public void setState(StateEntity stateId) {
         this.state = stateId;
     }
 

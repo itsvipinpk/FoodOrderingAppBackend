@@ -50,7 +50,7 @@ public class AddressController {
         //Creating addressEntity from SaveAddressRequest data.
         AddressEntity addressEntity = new AddressEntity();
 
-        addressEntity.setFlatBuilNo(saveAddressRequest.getFlatBuildingName());
+        addressEntity.setFlatBuilNumber(saveAddressRequest.getFlatBuildingName());
         addressEntity.setCity(saveAddressRequest.getCity());
         addressEntity.setLocality(saveAddressRequest.getLocality());
         addressEntity.setPincode(saveAddressRequest.getPincode());
@@ -103,7 +103,7 @@ public class AddressController {
             AddressList addressList = new AddressList()
                     .id(UUID.fromString(addressEntity.getUuid()))
                     .city(addressEntity.getCity())
-                    .flatBuildingName(addressEntity.getFlatBuilNo())
+                    .flatBuildingName(addressEntity.getFlatBuilNumber())
                     .locality(addressEntity.getLocality())
                     .pincode(addressEntity.getPincode())
                     .state(addressListState);

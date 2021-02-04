@@ -60,7 +60,7 @@ public class RestaurantController {
                             .address(
                                     new RestaurantDetailsResponseAddress()
                                             .id(UUID.fromString(restaurantEntities.get(i).getAddressEntity().getUuid()))
-                                            .flatBuildingName(restaurantEntities.get(i).getAddressEntity().getFlatBuilNo())
+                                            .flatBuildingName(restaurantEntities.get(i).getAddressEntity().getFlatBuilNumber())
                                             .locality(restaurantEntities.get(i).getAddressEntity().getLocality())
                                             .city(restaurantEntities.get(i).getAddressEntity().getCity())
                                             .pincode(restaurantEntities.get(i).getAddressEntity().getPincode())
