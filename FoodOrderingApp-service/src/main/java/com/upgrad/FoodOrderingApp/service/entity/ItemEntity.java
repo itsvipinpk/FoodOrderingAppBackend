@@ -1,5 +1,6 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
+import com.upgrad.FoodOrderingApp.service.common.ItemType;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@SuppressWarnings("all")
 @Entity
 @Table(name = "item")
 @NamedQueries(
@@ -35,10 +37,10 @@ public class ItemEntity {
     @Column(name = "price")
     private Integer price;
 
-    @NotNull
-    @Size(max = 10)
     @Column(name = "type")
-    private String type;
+    @Size(max = 10)
+    @NotNull
+    private ItemType type;
 
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @JoinTable(
@@ -84,11 +86,11 @@ public class ItemEntity {
         this.price = price;
     }
 
-    public String getType() {
+    public ItemType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(ItemType type) {
         this.type = type;
     }
 

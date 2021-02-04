@@ -9,6 +9,18 @@ import javax.validation.constraints.Size;
 @Table(name = "address")
 public class AddressEntity {
 
+    public AddressEntity(){
+    }
+
+    public AddressEntity(String uuid, String flatBuilNo, String locality, String city, String pincode, StateEntity stateEntity) {
+        this.uuid = uuid;
+        this.flatBuilNumber =flatBuilNo;
+        this.locality = locality;
+        this.city = city;
+        this.pincode = pincode;
+        this.state = stateEntity;
+        return;
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -33,7 +45,7 @@ public class AddressEntity {
 
     @OneToOne
     @JoinColumn(name = "state_id")
-    private State state;
+    private StateEntity state;
 
      @Column(name ="active")
      private  Integer  active;
@@ -86,11 +98,11 @@ public class AddressEntity {
         this.pincode = pincode;
     }
 
-    public State getState() {
+    public StateEntity getState() {
         return state;
     }
 
-    public void setState(State stateId) {
+    public void setState(StateEntity stateId) {
         this.state = stateId;
     }
 
