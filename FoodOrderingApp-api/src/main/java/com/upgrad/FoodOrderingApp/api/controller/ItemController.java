@@ -47,7 +47,7 @@ public class ItemController {
             itemList.setItemName(entity.getItemName());
 
             ItemList.ItemTypeEnum itemTypeEnum =
-                    (Integer.valueOf(entity.getType()) == 0)
+                    (Integer.valueOf(entity.getType().toString()) == 0)
                             ? ItemList.ItemTypeEnum.VEG
                             : ItemList.ItemTypeEnum.NON_VEG;
 

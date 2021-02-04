@@ -7,48 +7,42 @@ import org.hibernate.annotations.LazyCollectionOption;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Entity
-@Table(name = "category")
-@NamedQueries(
-        {
-//                @NamedQuery(name = "getAllRestaurantByCategoryId", query = "select c from CategoryEntity c where c.uuid = :categoryId")
-                @NamedQuery(name = "getAllCategories", query = "select c from CategoryEntity c "),
-                @NamedQuery(name = "getAllRestaurantByCategoryId", query = "select c from CategoryEntity c ")
-        }
-)
+@Table(name = "category",uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
+@NamedQueries({
 
-public class CategoryEntity {
+        @NamedQuery(name = "getCategoryByUuid",query = "SELECT c FROM CategoryEntity c WHERE c.uuid = :uuid"),
+        @NamedQuery(name = "getAllCategoriesOrderedByName",query = "SELECT c FROM CategoryEntity c ORDER BY c.categoryName ASC "),
+})
+public class CategoryEntity implements Serializable {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
+    @Column(name = "uuid")
     @Size(max = 200)
-    @Column(name = "uuid", unique = true)
+    @NotNull
     private String uuid;
 
-    @Size(max = 255)
     @Column(name = "category_name")
+    @Size(max = 255)
     private String categoryName;
 
-    //    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "category")
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany(mappedBy = "category")
-    private List<RestaurantEntity> restaurants = new ArrayList<RestaurantEntity>();
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany(mappedBy = "category")
-    private List<ItemEntity> items = new ArrayList<ItemEntity>();
+    //Created direct relation as the Test Mockito expects ListOf items as a variable in CategoryEntity.
+    @ManyToMany
+    @JoinTable(name = "category_item", joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "item_id"))
+    private List<ItemEntity> items = new ArrayList<>();
 
 
-
-    /*  getters and setters
-     * */
 
     public Integer getId() {
         return id;
@@ -72,14 +66,6 @@ public class CategoryEntity {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
-    }
-
-    public List<RestaurantEntity> getRestaurants() {
-        return restaurants;
-    }
-
-    public void setRestaurants(List<RestaurantEntity> restaurants) {
-        this.restaurants = restaurants;
     }
 
     public List<ItemEntity> getItems() {

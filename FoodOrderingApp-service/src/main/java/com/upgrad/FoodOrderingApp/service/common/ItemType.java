@@ -13,6 +13,10 @@ public enum ItemType {
         this.value = value;
     }
 
+
+    public String getValue() {
+        return value;
+    }
     @JsonValue
     @Override
     public String toString() {

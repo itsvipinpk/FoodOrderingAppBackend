@@ -9,6 +9,18 @@ import javax.validation.constraints.Size;
 @Table(name = "address")
 public class AddressEntity {
 
+    public AddressEntity(){
+    }
+
+    public AddressEntity(String uuid, String flatBuilNo, String locality, String city, String pincode, StateEntity stateEntity) {
+        this.uuid = uuid;
+        this.flatBuilNumber =flatBuilNo;
+        this.locality = locality;
+        this.city = city;
+        this.pincode = pincode;
+        this.state = stateEntity;
+        return;
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
