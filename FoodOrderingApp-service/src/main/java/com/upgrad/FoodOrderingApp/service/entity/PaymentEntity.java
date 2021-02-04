@@ -7,10 +7,16 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+
+/*
+ * This Entity class represents the "payment" table in DB
+ * */
+
 @Entity
 @Table(name = "payment",uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
 @NamedQueries({
         @NamedQuery(name = "getAllPayments",query = "SELECT p FROM PaymentEntity p"),
+        @NamedQuery(name = "getPaymentByUUID",query = "SELECT p FROM PaymentEntity p WHERE p.uuid = :uuid")
 })
 public class PaymentEntity {
 
@@ -27,6 +33,10 @@ public class PaymentEntity {
     @Column(name = "payment_name")
     @Size(max = 255)
     private String paymentName;
+
+    public PaymentEntity(){
+
+    }
 
     public Integer getId() {
         return id;

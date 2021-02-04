@@ -14,6 +14,10 @@ public class PaymentDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    /*
+     * This method return all payment methods
+     *  */
+
     public List<PaymentEntity> getAllPaymentMethods() {
         try {
             List<PaymentEntity> resultList = entityManager.createNamedQuery("getAllPayments", PaymentEntity.class).getResultList();
@@ -24,4 +28,5 @@ public class PaymentDao {
         }
 
     }
+
 }
