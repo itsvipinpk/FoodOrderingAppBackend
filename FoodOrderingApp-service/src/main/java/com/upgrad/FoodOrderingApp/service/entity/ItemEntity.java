@@ -1,7 +1,6 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
 import com.upgrad.FoodOrderingApp.service.common.ItemType;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -14,7 +13,8 @@ import java.util.List;
 @Table(name = "item")
 @NamedQueries(
         {
-                @NamedQuery(name = "getAllItems", query = "select i from ItemEntity i ")
+                @NamedQuery(name = "getAllItems", query = "select i from ItemEntity i "),
+                @NamedQuery(name = "itemByItemId", query = "select i from ItemEntity i where i.id =:id"),
         }
 )
 @NamedNativeQueries({
@@ -106,7 +106,6 @@ public class ItemEntity {
     }
 
     public void setType(ItemType type) {
-
         this.type = type;
     }
 
