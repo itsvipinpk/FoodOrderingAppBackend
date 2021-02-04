@@ -32,4 +32,14 @@ public class ItemDao {
         }
         return Collections.emptyList();
     }
+
+
+    public ItemEntity getItemByItemId(Integer itemId) {
+
+        ItemEntity item = entityManager
+                .createNamedQuery("itemByItemId", ItemEntity.class)
+                .setParameter("id", itemId)
+                .getSingleResult();
+        return item;
+    }
 }
