@@ -16,7 +16,9 @@ import java.util.Date;
 @Entity
 @Table(name = "orders")
 @NamedQueries({
-        @NamedQuery(name = "getOrdersByCouponId", query = "SELECT x FROM OrderEntity x WHERE x.coupon = :couponId")
+        @NamedQuery(name = "getOrdersByCouponId", query = "SELECT x FROM OrderEntity x WHERE x.coupon = :couponId"),
+        @NamedQuery(name = "getAllOrders", query = "SELECT x FROM OrderEntity x")
+
 })
 public class OrderEntity implements Serializable {
 
