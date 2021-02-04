@@ -17,53 +17,50 @@ public class RestaurantDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<RestaurantEntity> getAllRestaurant() {
-        try {
-            List<RestaurantEntity> resultList = entityManager.createNamedQuery("getAllRestaurants", RestaurantEntity.class).getResultList();
-            return resultList;
 
-        } catch (Exception e) {
+    //To get the list of restaurant by ratings from db
+    public List<RestaurantEntity> restaurantsByRating(){
+        try{
+            List<RestaurantEntity> restaurantEntities = entityManager.createNamedQuery("restaurantsByRating",RestaurantEntity.class).getResultList();
+            return restaurantEntities;
+        }catch (NoResultException nre){
             return null;
         }
     }
 
-
-    public List<ItemEntity> getAllItems() {
+    //To get the list of restaurant by name from db
+    public List<RestaurantEntity> restaurantsByName(String restaurantName) {
         try {
-            List<ItemEntity> resultList = entityManager.createNamedQuery("getAllItems", ItemEntity.class).getResultList();
-            return resultList;
+            String restaurantNameLow = "%"+restaurantName.toLowerCase()+"%"; // to make a check with lower
+            List<RestaurantEntity> restaurantEntities = entityManager.createNamedQuery("restaurantsByName", RestaurantEntity.class).setParameter("restaurant_name_low",restaurantNameLow).getResultList();
+            return restaurantEntities;
+        }catch (NoResultException nre){
+            return null;
+        }
 
-        } catch (Exception e) {
+    }
+    //To update the restaurant in the db and return updated restaurant entity.
+    public RestaurantEntity updateRestaurantRating(RestaurantEntity restaurantEntity) {
+        entityManager.merge(restaurantEntity);
+        return restaurantEntity;
+    }
+
+    /**
+     * Fetch the restaurant based on UUID.
+     *
+     * @param uuid
+     * @return RestaurantEntity if found in database else null.
+     */
+    public RestaurantEntity restaurantByUUID(String uuid) {
+        try {
+            return entityManager
+                    .createNamedQuery("getRestaurantByUuid", RestaurantEntity.class)
+                    .setParameter("uuid", uuid)
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+
             return null;
         }
     }
 
-    public List<CategoryEntity> getAllCategories() {
-        try {
-            List<CategoryEntity> resultList = entityManager.createNamedQuery("getAllCategories", CategoryEntity.class).getResultList();
-            return resultList;
-
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-            /**
-             * Fetch the restaurant based on UUID.
-             *
-             * @param uuid
-             * @return RestaurantEntity if found in database else null.
-             */
-            public RestaurantEntity restaurantByUUID (String uuid){
-                try {
-                    return entityManager
-                            .createNamedQuery("restaurantByUUID", RestaurantEntity.class)
-                            .setParameter("uuid", uuid)
-                            .getSingleResult();
-                } catch (NoResultException nre) {
-
-                    return null;
-                }
-            }
-
-    }
+}
