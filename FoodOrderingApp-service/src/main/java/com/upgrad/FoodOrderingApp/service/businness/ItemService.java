@@ -1,5 +1,15 @@
 package com.upgrad.FoodOrderingApp.service.businness;
 
+
+import com.upgrad.FoodOrderingApp.service.dao.ItemDao;
+import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
+import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
+import com.upgrad.FoodOrderingApp.service.exception.ItemNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
 import com.upgrad.FoodOrderingApp.service.dao.*;
 import com.upgrad.FoodOrderingApp.service.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +18,11 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedList;
 import java.util.List;
 
+
 @Service
 public class ItemService {
 
-    @Autowired
-    private ItemDao itemDao;
+    @Autowired private ItemDao itemDao;
 
     @Autowired
     RestaurantDao restaurantDao;
@@ -36,6 +46,7 @@ public class ItemService {
     public List<ItemEntity> getItemsByPopularity(RestaurantEntity restaurantEntity) {
         return itemDao.getOrdersByRestaurant(restaurantEntity);
     }
+
 
 
 
@@ -68,4 +79,5 @@ public class ItemService {
 
         return itemEntities;
     }
+
 }

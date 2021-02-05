@@ -27,10 +27,9 @@ public class ItemController {
 
     /**
      * This method gets top five popular items of a restaurant based on number of times it is ordered.
-     *
      * @param restaurantId UUID for the restaurant
-     * @return ItemListResponse
      * @throws RestaurantNotFoundException If restaurant with UUID doesn't exist in the database
+     * @author: Vipin P K
      */
     @CrossOrigin
     @RequestMapping(
