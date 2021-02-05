@@ -13,6 +13,8 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
+@SuppressWarnings("all")
+
 @Entity
 @Table(name = "customer_auth")
 @NamedQueries(

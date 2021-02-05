@@ -28,11 +28,11 @@ public class TestShipra{
     @Autowired
     private RestaurantDao restaurantDao;
 
-
-    @Test
-    public void test() throws Exception {
-        List<RestaurantEntity> result = restaurantDao.getAllRestaurant();
-        System.out.print(result);
-    }
+//
+//    @Test
+//    public void test() throws Exception {
+//        List<RestaurantEntity> result = restaurantDao.getAllRestaurant();
+//        System.out.print(result);
+//    }
 
 }
