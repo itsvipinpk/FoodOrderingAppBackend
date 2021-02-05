@@ -1,5 +1,10 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -9,53 +14,57 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "restaurant_category")
-@NamedQueries({
-
-        @NamedQuery(name = "getCategoriesByRestaurant",query = "SELECT r FROM RestaurantCategoryEntity r WHERE r.restaurant= :restaurant ORDER BY r.category.categoryName ASC "),
-        @NamedQuery(name = "getRestaurantByCategory",query = "SELECT r FROM RestaurantCategoryEntity r WHERE r.category = :category ORDER BY r.restaurant.customerRating DESC "),
-})
 public class RestaurantCategoryEntity implements Serializable {
 
+  @Id
+  @Column(name = "id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Column(name = "restaurant_id")
+  @NotNull
+  private Integer restaurantId;
 
+  @Column(name = "category_id")
+  @NotNull
+  private Integer categoryId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "restaurant_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @NotNull
-    private RestaurantEntity restaurant;
+  public Integer getId() {
+    return id;
+  }
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @NotNull
-    private CategoryEntity category;
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public Integer getId() {
-        return id;
-    }
+  public Integer getRestaurantId() {
+    return restaurantId;
+  }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  public void setRestaurantId(Integer restaurantId) {
+    this.restaurantId = restaurantId;
+  }
 
-    public RestaurantEntity getRestaurant() {
-        return restaurant;
-    }
+  public Integer getCategoryId() {
+    return categoryId;
+  }
 
-    public void setRestaurant(RestaurantEntity restaurant) {
-        this.restaurant = restaurant;
-    }
+  public void setCategoryId(Integer categoryId) {
+    this.categoryId = categoryId;
+  }
 
-    public CategoryEntity getCategory() {
-        return category;
-    }
+  @Override
+  public boolean equals(Object obj) {
+    return new EqualsBuilder().append(this, obj).isEquals();
+  }
 
-    public void setCategory(CategoryEntity category) {
-        this.category = category;
-    }
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder().append(this).hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+  }
 }
