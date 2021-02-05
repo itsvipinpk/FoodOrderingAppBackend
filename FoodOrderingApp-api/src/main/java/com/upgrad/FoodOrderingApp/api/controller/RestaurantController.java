@@ -197,35 +197,6 @@ public class RestaurantController {
                 }
             }
 
-            String[] split = categoryName.split(",");
-            Arrays.sort(split);
-            Arrays.toString(split);
-            String resultCategoryValues = String.join(",", split);
-
-            restaurantLists.add(
-                    new RestaurantList()
-                            .id(UUID.fromString(restaurantEntities.get(i).getUuid()))
-                            .restaurantName(restaurantEntities.get(i).getRestaurantName())
-                            .photoURL(restaurantEntities.get(i).getPhotoUrl())
-                            .customerRating(restaurantEntities.get(i).getCustomerRating())
-                            .averagePrice(restaurantEntities.get(i).getAveragePriceForTwo())
-                            .numberCustomersRated(restaurantEntities.get(i).getNumberOfCustomersRated())
-                            .address(
-                                    new RestaurantDetailsResponseAddress()
-                                            .id(UUID.fromString(restaurantEntities.get(i).getAddressEntity().getUuid()))
-                                            .flatBuildingName(restaurantEntities.get(i).getAddressEntity().getFlatBuilNumber())
-                                            .locality(restaurantEntities.get(i).getAddressEntity().getLocality())
-                                            .city(restaurantEntities.get(i).getAddressEntity().getCity())
-                                            .pincode(restaurantEntities.get(i).getAddressEntity().getPincode())
-                                            .state(new RestaurantDetailsResponseAddressState()
-                                                    .id(UUID.fromString(restaurantEntities.get(i).getAddressEntity().getState().getStateUuid()))
-                                                    .stateName(restaurantEntities.get(i).getAddressEntity().getState().getStateName())
-                                            )
-                            )
-                            .categories(resultCategoryValues)
-            );
-
-
             //Creating the RestaurantDetailsResponseAddressState for the RestaurantDetailsResponseAddress
             RestaurantDetailsResponseAddressState restaurantDetailsResponseAddressState = new RestaurantDetailsResponseAddressState()
                     .id(UUID.fromString(restaurantEntity.getAddressEntity().getState().getStateUuid()))
