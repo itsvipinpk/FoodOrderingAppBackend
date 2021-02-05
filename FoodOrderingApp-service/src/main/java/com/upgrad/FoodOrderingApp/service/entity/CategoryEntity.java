@@ -1,12 +1,17 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +22,23 @@ import java.util.List;
         {
 //                @NamedQuery(name = "getAllRestaurantByCategoryId", query = "select c from CategoryEntity c where c.uuid = :categoryId")
                 @NamedQuery(name = "getAllCategories", query = "select c from CategoryEntity c "),
-                @NamedQuery(name = "getAllRestaurantByCategoryId", query = "select c from CategoryEntity c ")
+                @NamedQuery(name = "getAllRestaurantByCategoryId", query = "select c from CategoryEntity c "),
+                @NamedQuery(
+                        name = "categoryByUuid",
+                        query = "select c from CategoryEntity c where c.uuid=:uuid order by categoryName"),
+                @NamedQuery(
+                        name = "getAllCategoriesOrderedByName",
+                        query = "select c from CategoryEntity c order by categoryName asc"),
+                @NamedQuery(
+                        name = "getCategoriesByRestaurant",
+                        query =
+                                "Select c from CategoryEntity c where id in (select rc.categoryId from RestaurantCategoryEntity rc where rc.restaurantId = "
+                                        + "(select r.id from RestaurantEntity r where "
+                                        + " r.uuid=:restaurantUuid) )  order by c.categoryName")
         }
 )
 
-public class CategoryEntity {
+public class CategoryEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -33,17 +50,27 @@ public class CategoryEntity {
     private String uuid;
 
     @Size(max = 255)
+    @NotNull
     @Column(name = "category_name")
     private String categoryName;
 
-    //    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "category")
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany(mappedBy = "category")
-    private List<RestaurantEntity> restaurants = new ArrayList<RestaurantEntity>();
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "restaurant_category",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "restaurant_id"))
+    private List<RestaurantEntity> restaurants;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany(mappedBy = "category")
-    private List<ItemEntity> items = new ArrayList<ItemEntity>();
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "category_item",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "item_id"))
+    private List<ItemEntity> items;
 
 
 
@@ -88,5 +115,19 @@ public class CategoryEntity {
 
     public void setItems(List<ItemEntity> items) {
         this.items = items;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        return new EqualsBuilder().append(this, obj).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(this).hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }

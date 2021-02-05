@@ -92,4 +92,17 @@ public class RestExceptionHandler {
                 new ErrorResponse().code(exception.getCode()).message(exception.getErrorMessage()),
                 HttpStatus.NOT_FOUND);
     }
+
+    /**
+     * Exception handler for CategoryNotFoundException
+     * @return ResponseEntity<ErrorResponse> type object displaying error code and error message along
+     *     * with HttpStatus as NOT_FOUND.
+     */
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> categoryNotFoundException(
+            CategoryNotFoundException exception, WebRequest request) {
+        return new ResponseEntity<ErrorResponse>(
+                new ErrorResponse().code(exception.getCode()).message(exception.getErrorMessage()),
+                HttpStatus.NOT_FOUND);
+    }
 }
