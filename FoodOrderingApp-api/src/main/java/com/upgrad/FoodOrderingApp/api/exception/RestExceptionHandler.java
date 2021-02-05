@@ -107,7 +107,7 @@ public class RestExceptionHandler {
                 HttpStatus.NOT_FOUND);
     }
 
-    }
+
 
     @ExceptionHandler(InvalidRatingException.class)
     public ResponseEntity<ErrorResponse> invalidRatingException(InvalidRatingException exc ,WebRequest request) {

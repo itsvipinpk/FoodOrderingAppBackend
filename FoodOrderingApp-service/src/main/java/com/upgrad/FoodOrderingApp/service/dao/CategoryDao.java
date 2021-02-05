@@ -11,52 +11,6 @@ import java.util.List;
 @Repository
 public class CategoryDao {
 
-
-  @PersistenceContext private EntityManager entityManager;
-
-  /**
-   * This method fetches CategoryEntity from database based Category UUID.
-   * @param categoryUuid
-   * @return CategoryEntity or null if there is no category in database by given categoryUuid.
-   */
-  public CategoryEntity getCategoryByUuid(final String categoryUuid) {
-    try {
-      return entityManager
-          .createNamedQuery("categoryByUuid", CategoryEntity.class)
-          .setParameter("uuid", categoryUuid)
-          .getSingleResult();
-    } catch (NoResultException nre) {
-      return null;
-    }
-  }
-
-  /**
-   * This method fetches all CategoryEntity from db
-   * @return List of categoryEntity
-   */
-  public List<CategoryEntity> getAllCategoriesOrderedByName() {
-
-    return entityManager
-        .createNamedQuery("getAllCategoriesOrderedByName", CategoryEntity.class)
-        .getResultList();
-  }
-
-  /**
-   * This method fetches all CategoryEntity from db for given restaurant
-   * @param restaurantUuid
-   * @return List of categoryEntity
-   */
-  public List<CategoryEntity> getCategoriesByRestaurant(final String restaurantUuid) {
-    try {
-      return entityManager
-          .createNamedQuery("getCategoriesByRestaurant", CategoryEntity.class)
-          .setParameter("restaurantUuid", restaurantUuid)
-          .getResultList();
-    } catch (NoResultException nre) {
-      return null;
-    }
-  }
-
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -80,5 +34,4 @@ public class CategoryDao {
             return null;
         }
     }
-
 }

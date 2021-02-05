@@ -107,7 +107,6 @@ public class ItemEntity {
 
     public void setType(ItemType type) {
 
-        this.type = type.toString();
         this.type = type;
     }
 
