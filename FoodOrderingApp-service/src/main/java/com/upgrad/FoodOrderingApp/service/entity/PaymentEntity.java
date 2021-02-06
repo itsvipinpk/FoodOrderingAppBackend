@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 
 /*
@@ -18,7 +19,7 @@ import javax.validation.constraints.Size;
         @NamedQuery(name = "getAllPayments",query = "SELECT p FROM PaymentEntity p"),
         @NamedQuery(name = "getPaymentByUUID",query = "SELECT p FROM PaymentEntity p WHERE p.uuid = :uuid")
 })
-public class PaymentEntity {
+public class PaymentEntity implements Serializable {
 
     @Id
     @Column(name = "id")
@@ -36,6 +37,12 @@ public class PaymentEntity {
 
     public PaymentEntity(){
 
+    }
+
+    public PaymentEntity(String paymentId, String paymentName) {
+
+        this.uuid = paymentId;
+        this.paymentName = paymentName;
     }
 
     public Integer getId() {

@@ -45,4 +45,21 @@ public class CustomerDao {
         entityManager.merge(customerEntity);
         return customerEntity;
     }
+
+    /**
+     * This method helps finds the customer by using customerId.
+     *
+     * @param customerUuid to find the customer with customerId (UUID)
+     * @return CustomerEntity if the customerId exists in the database
+     */
+    public CustomerEntity getCustomerByCustomerUuid(final String customerUuid) {
+        try {
+            return entityManager
+                    .createNamedQuery("customerByCustomerId", CustomerEntity.class)
+                    .setParameter("customerId", customerUuid)
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
 }
