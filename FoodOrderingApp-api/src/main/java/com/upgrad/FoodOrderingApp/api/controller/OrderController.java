@@ -72,17 +72,12 @@ public class OrderController {
         CustomerEntity customerEntity = customerService.getCustomer(accessToken);
 
         OrderListCustomer orderListCustomer = new OrderListCustomer();
-//        orderListCustomer.contactNumber(customerEntity.getContactNumber())
-//                .emailAddress(customerEntity.getEmailAddress())
-//                .id(UUID.fromString(customerEntity.getUuid()))
-//                .firstName(customerEntity.getFirstName())
-//                .lastName(customerEntity.getLastName());
+
         orderListCustomer.contactNumber(customerEntity.getContactNumber())
                 .emailAddress(customerEntity.getEmailAddress())
                 .id(UUID.fromString(customerEntity.getUuid()))
                 .firstName(customerEntity.getFirstName())
                 .lastName(customerEntity.getLastName());
-
 
         List<OrderEntity> ordersByCustomers = orderService.getOrdersByCustomers(customerEntity.getUuid());
         List<OrderList> orderListResponse = new ArrayList<>();

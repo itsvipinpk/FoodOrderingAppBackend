@@ -46,7 +46,7 @@ public class AddressService {
             throw new SaveAddressException("SAR-001","No field can be empty");
         }
 
-        if(isPincodeValid(addressEntity.getPincode())){
+        if(!isPincodeValid(addressEntity.getPincode())){
             throw new SaveAddressException("SAR-002","Invalid pincode");
         }
 
