@@ -2,11 +2,11 @@ package com.upgrad.FoodOrderingApp.service.entity;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 
@@ -15,7 +15,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "order_item")
 @NamedQueries({
-        @NamedQuery(name = "orderItemsByOrderId", query = "SELECT x FROM OrderItemEntity x WHERE x.orderId = :uuid")
+        @NamedQuery(name = "orderItemsByOrder", query = "SELECT x FROM OrderItemEntity x WHERE x.order = :orders  ORDER BY x.item ASC")
+
 })
 public class OrderItemEntity implements Serializable {
 
@@ -24,13 +25,15 @@ public class OrderItemEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "order_id")
-    @NotNull
-    private Integer orderId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private OrderEntity order;
 
-    @Column(name = "item_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "item_id")
     @NotNull
-    private Integer itemId;
+    private ItemEntity item;
 
     @Column(name = "price")
     @NotNull
@@ -48,20 +51,20 @@ public class OrderItemEntity implements Serializable {
         this.id = id;
     }
 
-    public Integer getOrderId() {
-        return orderId;
+    public OrderEntity getOrder() {
+        return order;
     }
 
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
+    public void setOrder(OrderEntity orderId) {
+        this.order = orderId;
     }
 
-    public Integer getItemId() {
-        return itemId;
+    public ItemEntity getItem() {
+        return item;
     }
 
-    public void setItemId(Integer itemId) {
-        this.itemId = itemId;
+    public void setItem(ItemEntity item) {
+        this.item = item;
     }
 
     public Integer getPrice() {
@@ -80,30 +83,5 @@ public class OrderItemEntity implements Serializable {
         this.quantity = quantity;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
-
-        OrderItemEntity that = (OrderItemEntity) o;
-
-        return new EqualsBuilder().append(id, that.id).append(orderId, that.orderId).append(itemId, that.itemId).append(price, that.price).append(quantity, that.quantity).isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(id).append(orderId).append(itemId).append(price).append(quantity).toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "OrderItemEntity{" +
-                "id=" + id +
-                ", orderId=" + orderId +
-                ", itemId=" + itemId +
-                ", price=" + price +
-                ", quantity=" + quantity +
-                '}';
-    }
 }

@@ -1,5 +1,6 @@
 package com.upgrad.FoodOrderingApp.service.dao;
 
+import com.upgrad.FoodOrderingApp.service.entity.OrderEntity;
 import com.upgrad.FoodOrderingApp.service.entity.OrderItemEntity;
 import org.springframework.stereotype.Repository;
 
@@ -15,14 +16,18 @@ public class OrderItemDao {
     private EntityManager entityManager;
 
 
-    //To get all the order corresponding to the address
-    public List<OrderItemEntity> getOrderItemsByOrderId(String orderUuid) {
+    public List<OrderItemEntity> getOrderItemsByOrder(OrderEntity order) {
         try {
-            List<OrderItemEntity> orderItemEntities = entityManager.createNamedQuery("orderItemsByOrderId", OrderItemEntity.class).setParameter("uuid", orderUuid).getResultList();
+            List<OrderItemEntity> orderItemEntities = entityManager.createNamedQuery("orderItemsByOrder", OrderItemEntity.class).setParameter("order", order).getResultList();
             return orderItemEntities;
         } catch (NoResultException nre) {
             return null;
         }
     }
+    public OrderItemEntity saveOrderItem(OrderItemEntity orderItemEntity){
+        entityManager.persist(orderItemEntity);
+        return orderItemEntity;
+    }
+
 
 }

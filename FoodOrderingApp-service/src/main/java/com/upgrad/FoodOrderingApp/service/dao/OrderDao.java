@@ -1,9 +1,6 @@
 package com.upgrad.FoodOrderingApp.service.dao;
 
-import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
-import com.upgrad.FoodOrderingApp.service.entity.CouponEntity;
-import com.upgrad.FoodOrderingApp.service.entity.OrderEntity;
-import com.upgrad.FoodOrderingApp.service.entity.OrderItemEntity;
+import com.upgrad.FoodOrderingApp.service.entity.*;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -30,32 +27,40 @@ public class OrderDao {
     }
 
     //To get all the coupon corresponding to the coupon id
-    public CouponEntity getCouponByCouponId(String couponId) {
-        try {
-            OrderEntity entity = entityManager.createNamedQuery("getOrdersByCouponId", OrderEntity.class).setParameter("couponId", couponId).getSingleResult();
-            return entity.getCoupon();
-        } catch (NoResultException nre) {
-            return null;
-        }
-    }
+//    public CouponEntity getCouponByCouponId(String couponId) {
+//        try {
+//            OrderEntity entity = entityManager.createNamedQuery("getOrdersByCouponId", OrderEntity.class).setParameter("couponId", couponId).getSingleResult();
+//            return entity.getCoupon();
+//        } catch (NoResultException nre) {
+//            return null;
+//        }
+//    }
 
     public OrderEntity saveOrder(OrderEntity orderEntity) {
-        entityManager.merge(orderEntity);
+        entityManager.persist(orderEntity);
         return orderEntity;
     }
+//
+//    public OrderItemEntity saveOrderItem(OrderItemEntity orderItemEntity) {
+//        entityManager.merge(orderItemEntity);
+//        return orderItemEntity;
+//    }
 
-    public OrderItemEntity saveOrderItem(OrderItemEntity orderItemEntity) {
-        entityManager.merge(orderItemEntity);
-        return orderItemEntity;
-    }
-
-    public List<OrderEntity> getOrdersByCustomers(Integer customerId) {
+//    public List<OrderEntity> getOrdersByCustomers(Integer customerId) {
+//        try {
+//            List<OrderEntity> orderEntities = entityManager.createNamedQuery("getAllOrders", OrderEntity.class).getResultList();
+//            List<OrderEntity> result = orderEntities.stream().filter(x -> x.getCustomer().getId().equals(customerId)).collect(Collectors.toList());
+//            return result;
+//        } catch (NoResultException nre) {
+//            return null;
+//        }
+//    }
+    public List<OrderEntity>getOrdersByCustomers(CustomerEntity customerEntity){
         try {
-            List<OrderEntity> orderEntities = entityManager.createNamedQuery("getAllOrders", OrderEntity.class).getResultList();
-            List<OrderEntity> result = orderEntities.stream().filter(x -> x.getCustomer().getId().equals(customerId)).collect(Collectors.toList());
-            return result;
-        } catch (NoResultException nre) {
+            return entityManager.createNamedQuery("getOrdersByCustomers", OrderEntity.class).setParameter("customer",customerEntity).getResultList();
+        }catch (NoResultException e){
             return null;
         }
+
     }
 }

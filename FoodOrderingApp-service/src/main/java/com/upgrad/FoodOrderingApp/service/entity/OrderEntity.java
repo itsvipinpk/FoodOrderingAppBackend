@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 
 @SuppressWarnings("All")
@@ -17,8 +18,9 @@ import java.util.Date;
 @Table(name = "orders")
 @NamedQueries({
         @NamedQuery(name = "getOrdersByCouponId", query = "SELECT x FROM OrderEntity x WHERE x.coupon = :couponId"),
-        @NamedQuery(name = "getAllOrders", query = "SELECT x FROM OrderEntity x")
-
+        @NamedQuery(name = "getAllOrders", query = "SELECT x FROM OrderEntity x"),
+        @NamedQuery(name = "getOrdersByCustomers", query = "SELECT o FROM OrderEntity o WHERE o.customer = :customer ORDER BY o.date DESC"),
+        @NamedQuery(name = "getOrdersByAddress", query = "SELECT x FROM OrderEntity x WHERE x.address = :address")
 })
 public class OrderEntity implements Serializable {
 
@@ -36,7 +38,7 @@ public class OrderEntity implements Serializable {
     @Column(name = "bill")
     private Double bill;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "coupon_id")
     private CouponEntity coupon;
 
@@ -47,23 +49,22 @@ public class OrderEntity implements Serializable {
     @Column(name = "date")
     private Date date;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "payment_id")
     private PaymentEntity payment;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     private CustomerEntity customer;
 
-    @OneToOne(fetch = FetchType.EAGER)
-
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private AddressEntity address;
 
     @NotNull
-    @Column(name = "restaurant_id")
-    private Integer restaurantId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "restaurant_id")
+    private RestaurantEntity restaurant;
 
     public OrderEntity(String orderId, double bill, CouponEntity couponEntity, double discount, Date orderDate, PaymentEntity payment, CustomerEntity customerEntity, AddressEntity addressEntity, RestaurantEntity restaurantEntity) {
 
@@ -75,7 +76,7 @@ public class OrderEntity implements Serializable {
         this.payment = payment;
         this.customer = customerEntity;
         this.address = addressEntity;
-        this.restaurantId = restaurantEntity.getId();
+        this.restaurant = restaurantEntity;
     }
 
     public OrderEntity() {
@@ -142,46 +143,13 @@ public class OrderEntity implements Serializable {
         this.address = address;
     }
 
-    public Integer getRestaurantId() {
-        return restaurantId;
+    public RestaurantEntity getRestaurant() {
+        return restaurant;
     }
 
-    public void setRestaurantId(Integer restaurantId) {
-        this.restaurantId = restaurantId;
+    public void setRestaurant(RestaurantEntity restaurant) {
+        this.restaurant = restaurant;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        OrderEntity that = (OrderEntity) o;
-
-        return new EqualsBuilder().append(id, that.id).append(uuid, that.uuid).append(bill, that.bill).append(coupon, that.coupon).append(discount, that.discount).append(date, that.date).append(payment, that.payment).append(customer, that.customer).append(address, that.address).append(restaurantId, that.restaurantId).isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(id).append(uuid).append(bill).append(coupon).append(discount).append(date).append(payment).append(customer).append(address).append(restaurantId).toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "OrderEntity{" +
-                "id=" + id +
-                ", uuid='" + uuid + '\'' +
-                ", bill=" + bill +
-                ", coupon=" + coupon +
-                ", discount=" + discount +
-                ", date=" + date +
-                ", paymentId=" + payment +
-                ", customerId=" + customer +
-                ", address=" + address +
-                ", restaurantId=" + restaurantId +
-                '}';
-    }
-
 
     public CustomerEntity getCustomer() {
         return customer;
@@ -193,5 +161,43 @@ public class OrderEntity implements Serializable {
 
     public AddressEntity getAddress() {
         return address;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderEntity{" +
+                "id=" + id +
+                ", uuid='" + uuid + '\'' +
+                ", bill=" + bill +
+                ", coupon=" + coupon +
+                ", discount=" + discount +
+                ", date=" + date +
+                ", payment=" + payment +
+                ", customer=" + customer +
+                ", address=" + address +
+                ", restaurant=" + restaurant +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderEntity that = (OrderEntity) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(uuid, that.uuid) &&
+                Objects.equals(bill, that.bill) &&
+                Objects.equals(coupon, that.coupon) &&
+                Objects.equals(discount, that.discount) &&
+                Objects.equals(date, that.date) &&
+                Objects.equals(payment, that.payment) &&
+                Objects.equals(customer, that.customer) &&
+                Objects.equals(address, that.address) &&
+                Objects.equals(restaurant, that.restaurant);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, uuid, bill, coupon, discount, date, payment, customer, address, restaurant);
     }
 }
