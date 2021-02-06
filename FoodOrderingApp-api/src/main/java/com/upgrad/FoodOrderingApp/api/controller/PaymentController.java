@@ -26,7 +26,7 @@ public class PaymentController {
 
     @CrossOrigin
     @RequestMapping(method = RequestMethod.GET, path = "/payment", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<PaymentListResponse> getRestaurantByRestaurantId() throws PaymentMethodNotFoundException {
+    public ResponseEntity<PaymentListResponse> getPaymentMethods() throws PaymentMethodNotFoundException {
 
         List<PaymentEntity> paymentEntities = paymentService.getAllPaymentMethods();
 

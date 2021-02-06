@@ -21,10 +21,19 @@ public class PaymentService {
     public List<PaymentEntity> getAllPaymentMethods() throws  PaymentMethodNotFoundException{
         List<PaymentEntity> paymentEntity = paymentDao.getAllPaymentMethods();
         if(paymentEntity == null){
-            throw new PaymentMethodNotFoundException("PAY-001","No payment method found");
+            throw new PaymentMethodNotFoundException("PNF-001","No payment method found");
         }
         return paymentEntity;
     }
 
+
+    public PaymentEntity getPaymentByUUID(String uuid) throws  PaymentMethodNotFoundException{
+     
+        PaymentEntity paymentEntity = paymentDao.getPaymentByUUID(uuid);
+        if(paymentEntity == null){
+            throw new PaymentMethodNotFoundException("PNF-002","No payment method found by this id");
+        }
+        return paymentEntity;
+    }
 
 }
