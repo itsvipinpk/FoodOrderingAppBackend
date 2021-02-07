@@ -11,6 +11,9 @@ import javax.persistence.PersistenceContext;
 public class CouponDao {
    @PersistenceContext
    private EntityManager entityManager;
+
+    /* To get coupon from the db using coupon's name
+     * */
     public CouponEntity getCouponByCouponName(String couponName){
         try {
             return entityManager.createNamedQuery("getCouponByCouponName",CouponEntity.class).setParameter("coupon_name",couponName).getSingleResult();
@@ -20,7 +23,8 @@ public class CouponDao {
     }
 
 
-    //To get Coupon By Coupon Id from the db
+    /* To get coupon from the db using coupon's uuid
+     * */
     public CouponEntity getCouponByCouponId(String couponUuid) {
         try {
             CouponEntity couponEntity = entityManager.createNamedQuery("getCouponByCouponId",CouponEntity.class).setParameter("uuid",couponUuid).getSingleResult();

@@ -16,7 +16,8 @@ public class OrderDao {
     private EntityManager entityManager;
 
 
-    //To get all the order corresponding to the address
+   /* To get List of order from the DB , corresponding to a address
+   * */
     public List<OrderEntity> getOrdersByAddress(AddressEntity addressEntity) {
         try {
             List<OrderEntity> ordersEntities = entityManager.createNamedQuery("getOrdersByAddress", OrderEntity.class).setParameter("address", addressEntity).getResultList();
@@ -26,35 +27,17 @@ public class OrderDao {
         }
     }
 
-    //To get all the coupon corresponding to the coupon id
-//    public CouponEntity getCouponByCouponId(String couponId) {
-//        try {
-//            OrderEntity entity = entityManager.createNamedQuery("getOrdersByCouponId", OrderEntity.class).setParameter("couponId", couponId).getSingleResult();
-//            return entity.getCoupon();
-//        } catch (NoResultException nre) {
-//            return null;
-//        }
-//    }
 
+    /* To save order in the DB
+     * */
     public OrderEntity saveOrder(OrderEntity orderEntity) {
         entityManager.persist(orderEntity);
         return orderEntity;
     }
-//
-//    public OrderItemEntity saveOrderItem(OrderItemEntity orderItemEntity) {
-//        entityManager.merge(orderItemEntity);
-//        return orderItemEntity;
-//    }
 
-//    public List<OrderEntity> getOrdersByCustomers(Integer customerId) {
-//        try {
-//            List<OrderEntity> orderEntities = entityManager.createNamedQuery("getAllOrders", OrderEntity.class).getResultList();
-//            List<OrderEntity> result = orderEntities.stream().filter(x -> x.getCustomer().getId().equals(customerId)).collect(Collectors.toList());
-//            return result;
-//        } catch (NoResultException nre) {
-//            return null;
-//        }
-//    }
+
+    /* To get List of order from the db, corresponding to a customer
+     * */
     public List<OrderEntity>getOrdersByCustomers(CustomerEntity customerEntity){
         try {
             return entityManager.createNamedQuery("getOrdersByCustomers", OrderEntity.class).setParameter("customer",customerEntity).getResultList();

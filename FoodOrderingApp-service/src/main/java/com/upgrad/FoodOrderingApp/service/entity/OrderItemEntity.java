@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "order_item")
 @NamedQueries({
-        @NamedQuery(name = "orderItemsByOrder", query = "SELECT x FROM OrderItemEntity x WHERE x.order = :orders  ORDER BY x.item ASC")
+        @NamedQuery(name = "orderItemsByOrder", query = "SELECT x FROM OrderItemEntity x WHERE x.order = :order  ORDER BY x.item ASC")
 
 })
 public class OrderItemEntity implements Serializable {
