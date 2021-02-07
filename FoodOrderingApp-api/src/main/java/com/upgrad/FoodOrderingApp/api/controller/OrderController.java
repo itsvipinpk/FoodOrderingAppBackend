@@ -40,6 +40,11 @@ public class OrderController {
 
 
 
+    /* The method handles get Coupon By CouponName request.
+      It takes authorization from the header and coupon name as the path variable.
+     Produces response in CouponDetailsResponse and returns UUID,Coupon Name and Percentage of coupon present in the DB
+       if error occurs, returns error code and error Message.
+    */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.GET, path = "/order/coupon/{coupon_name}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<CouponDetailsResponse> getCouponByCouponName(@RequestHeader(value = "authorization") final String authorization, @PathVariable(value = "coupon_name") final String couponName) throws AuthorizationFailedException, CouponNotFoundException {
@@ -60,6 +65,10 @@ public class OrderController {
 
     }
 
+    /* The method handles past order request of customer.It takes authorization from the header
+          Produces response in CustomerOrderResponse and retrieve all the past orders from the customer sorted by their order date, with the newest order first
+            if error occurs, returns error code and error Message.
+      */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.GET, path = "/order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<CustomerOrderResponse> getAllCustomerOrders(
@@ -147,8 +156,10 @@ public class OrderController {
 
     }
 
-
-    //POST saveorder
+    /* The method handles save Order request.It takes authorization from the header and other details in SaveOrderRequest.
+       produces response in SaveOrderResponse and returns UUID and successful message
+       if error occurs, returns error code and error Message.
+    */
     @CrossOrigin
     @RequestMapping(method = RequestMethod.POST, path = "/order", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SaveOrderResponse> saveOrder(@RequestHeader(value = "authorization") final String authorization, @RequestBody(required = false) final SaveOrderRequest saveOrderRequest) throws AuthorizationFailedException, PaymentMethodNotFoundException, AddressNotFoundException, RestaurantNotFoundException, ItemNotFoundException, CouponNotFoundException {
