@@ -259,8 +259,15 @@ public class RestaurantController {
                 ItemList itemList = new ItemList()
                         .id(UUID.fromString(itemEntity.getUuid()))
                         .itemName(itemEntity.getItemName())
-                        .price(itemEntity.getPrice())
-                        .itemType(ItemList.ItemTypeEnum.fromValue(itemEntity.getType().getValue()));
+                        .price(itemEntity.getPrice());
+
+
+                ItemList.ItemTypeEnum itemTypeEnum =
+                        (Integer.valueOf(itemEntity.getType().toString()) == 0)
+                                ? ItemList.ItemTypeEnum.VEG
+                                : ItemList.ItemTypeEnum.NON_VEG;
+
+                itemList.setItemType(itemTypeEnum);
 
                 itemLists.add(itemList);
             });
